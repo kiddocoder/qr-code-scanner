@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 function BottomBar() {
     const location = useLocation();
     // Check if current route is active
-    const isActive = (path) => {
+    const isActive = (path: any) => {
         return location.pathname === path
     }
 

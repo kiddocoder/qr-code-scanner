@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 export const Sidebar = () => {
     const location = useLocation();
     // Check if current route is active
-    const isActive = (path) => {
+    const isActive = (path: any) => {
         return location.pathname === path
     }
 

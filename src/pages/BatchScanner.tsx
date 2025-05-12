@@ -14,7 +14,6 @@ import {
     X,
     Check,
     ChevronLeft,
-    Menu,
     Layers,
     Link,
     ShoppingCart,
@@ -53,7 +52,7 @@ export default function BatchScanPage() {
     const [showConfirmClear, setShowConfirmClear] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
 
-    const videoRef = useRef<HTMLVideoElement>(null)
+    const videoRef = useRef<any>(null)
     const scannerRef = useRef<QrScanner | null>(null)
     const scanAreaRef = useRef<HTMLDivElement>(null)
 
@@ -154,7 +153,7 @@ export default function BatchScanPage() {
                 // Create scanner with more specific options
                 const scanner = new QrScanner(
                     videoRef.current,
-                    (result) => {
+                    (result: any) => {
                         handleSuccessfulScan(result.data)
                     },
                     {
@@ -188,7 +187,7 @@ export default function BatchScanPage() {
                 setHasFlash(hasFlash)
 
                 setIsInitializing(false)
-            } catch (error) {
+            } catch (error: any) {
                 console.error("Error starting scanner:", error)
                 setIsInitializing(false)
                 setIsScanning(false)
@@ -461,51 +460,51 @@ export default function BatchScanPage() {
         }
     }
 
-    const resetCameraPermission = () => {
-        // Stop any active scanner
-        if (scannerRef.current) {
-            try {
-                scannerRef.current.stop()
-                scannerRef.current.destroy()
-                scannerRef.current = null
-            } catch (e) {
-                console.error("Error cleaning up scanner:", e)
-            }
-        }
+    // const resetCameraPermission = () => {
+    //     // Stop any active scanner
+    //     if (scannerRef.current) {
+    //         try {
+    //             scannerRef.current.stop()
+    //             scannerRef.current.destroy()
+    //             scannerRef.current = null
+    //         } catch (e) {
+    //             console.error("Error cleaning up scanner:", e)
+    //         }
+    //     }
 
-        // Reset state
-        setIsScanning(false)
-        setCameraPermission("pending")
+    //     // Reset state
+    //     setIsScanning(false)
+    //     setCameraPermission("pending")
 
-        // Force browser to show permission dialog again
-        navigator.mediaDevices
-            .getUserMedia({
-                video: { facingMode: "environment" },
-            })
-            .then((stream) => {
-                // Stop all tracks immediately
-                stream.getTracks().forEach((track) => track.stop())
+    //     // Force browser to show permission dialog again
+    //     navigator.mediaDevices
+    //         .getUserMedia({
+    //             video: { facingMode: "environment" },
+    //         })
+    //         .then((stream) => {
+    //             // Stop all tracks immediately
+    //             stream.getTracks().forEach((track) => track.stop())
 
-                // Check for cameras again
-                QrScanner.listCameras(true)
-                    .then((cameras) => {
-                        setAvailableCameras(cameras)
-                        if (cameras.length > 0) {
-                            setSelectedCamera(cameras[0])
-                        }
-                        setCameraPermission("granted")
-                    })
-                    .catch((err) => {
-                        console.error("Error listing cameras:", err)
-                        setCameraPermission("granted") // Still try with default camera
-                        setSelectedCamera({ id: "default", label: "Default Camera" })
-                    })
-            })
-            .catch((err) => {
-                console.error("Failed to request camera permission:", err)
-                setCameraPermission("denied")
-            })
-    }
+    //             // Check for cameras again
+    //             QrScanner.listCameras(true)
+    //                 .then((cameras) => {
+    //                     setAvailableCameras(cameras)
+    //                     if (cameras.length > 0) {
+    //                         setSelectedCamera(cameras[0])
+    //                     }
+    //                     setCameraPermission("granted")
+    //                 })
+    //                 .catch((err) => {
+    //                     console.error("Error listing cameras:", err)
+    //                     setCameraPermission("granted") // Still try with default camera
+    //                     setSelectedCamera({ id: "default", label: "Default Camera" })
+    //                 })
+    //         })
+    //         .catch((err) => {
+    //             console.error("Failed to request camera permission:", err)
+    //             setCameraPermission("denied")
+    //         })
+    // }
 
     return (
         <div className="min-h-screen bg-black text-white">
