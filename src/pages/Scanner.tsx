@@ -74,29 +74,32 @@ const ScanPage = () => {
                 const videoDevices = devices.filter(device => device.kind === 'videoinput');
 
                 if (videoDevices.length > 0) {
-                    // Try to identify back camera
+                    // Try to identify both cameras
                     let backCamera: any = null;
-                    let frontCamera = null;
+                    let frontCamera: any = null;
 
                     for (const device of videoDevices) {
                         const label = device.label.toLowerCase();
 
                         if (label.includes('back') || label.includes('rear')) {
                             backCamera = device;
-                            break; // Found definite back camera
                         } else if (label.includes('front') || label.includes('face')) {
                             frontCamera = device;
                         }
                     }
 
-                    // If no back camera found but we have multiple cameras, 
-                    // the second one is often the back camera on mobile devices
-                    if (!backCamera && videoDevices.length > 1) {
-                        backCamera = videoDevices[1];
+                    // If we couldn't identify by label, make educated guesses
+                    if (videoDevices.length > 1) {
+                        // On mobile devices, camera[0] is typically front, camera[1] is back
+                        if (!frontCamera) frontCamera = videoDevices[0];
+                        if (!backCamera) backCamera = videoDevices[1];
                     }
 
                     // Set to back camera if available, otherwise first camera
-                    setSelectedCamera(backCamera || videoDevices[0]);
+                    setSelectedCamera(backCamera || frontCamera || videoDevices[0]);
+
+                    // You might want to store both cameras in state if you need to switch between them
+                    // setCameras({ front: frontCamera, back: backCamera });
                 }
             } catch (error) {
                 console.error("Camera error:", error);
