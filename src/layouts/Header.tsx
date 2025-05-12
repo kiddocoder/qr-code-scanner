@@ -15,13 +15,10 @@ function Header() {
 
         // If logging in, show mode selection
         if (!isLoggedIn) {
-            setShowModeSelection(true)
             setIsStaff(true) // Auto set to staff for demo
         } else {
             // If logging out, reset staff status and mode
             setIsStaff(false)
-            setScannerMode("general")
-            setShowModeSelection(false)
         }
     }
 
@@ -63,7 +60,6 @@ function Header() {
                             <button
                                 onClick={() => {
                                     setShowUserMenu(false)
-                                    setShowModeSelection(true)
                                 }}
                                 className="w-full text-left px-4 py-2 rounded-lg hover:bg-background flex items-center gap-2 transition-colors"
                             >
