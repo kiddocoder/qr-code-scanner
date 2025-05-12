@@ -65,24 +65,44 @@ const ScanPage = () => {
         // Check for camera permission
         const checkPermission = async () => {
             try {
-                await navigator.mediaDevices.getUserMedia({ video: true })
-                setCameraPermission("granted")
+                // First get permission
+                await navigator.mediaDevices.getUserMedia({ video: true });
+                setCameraPermission("granted");
 
                 // Get available cameras
-                const cameras = await QrScanner.listCameras()
-                if (cameras.length > 0) {
-                    // Prefer back camera if available
-                    const backCamera = cameras.find(
-                        (camera) =>
-                            camera.label.toLowerCase().includes("back") || camera.label.toLowerCase().includes("rear"),
-                    )
-                    setSelectedCamera(backCamera || cameras[0])
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
+
+                if (videoDevices.length > 0) {
+                    // Try to identify back camera
+                    let backCamera: any = null;
+                    let frontCamera = null;
+
+                    for (const device of videoDevices) {
+                        const label = device.label.toLowerCase();
+
+                        if (label.includes('back') || label.includes('rear')) {
+                            backCamera = device;
+                            break; // Found definite back camera
+                        } else if (label.includes('front') || label.includes('face')) {
+                            frontCamera = device;
+                        }
+                    }
+
+                    // If no back camera found but we have multiple cameras, 
+                    // the second one is often the back camera on mobile devices
+                    if (!backCamera && videoDevices.length > 1) {
+                        backCamera = videoDevices[1];
+                    }
+
+                    // Set to back camera if available, otherwise first camera
+                    setSelectedCamera(backCamera || videoDevices[0]);
                 }
             } catch (error) {
-                console.error("Camera permission denied:", error)
-                setCameraPermission("denied")
+                console.error("Camera error:", error);
+                setCameraPermission("denied");
             }
-        }
+        };
 
         checkPermission()
 
