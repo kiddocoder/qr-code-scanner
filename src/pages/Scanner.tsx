@@ -71,7 +71,12 @@ const ScanPage = () => {
                 // Get available cameras
                 const cameras = await QrScanner.listCameras()
                 if (cameras.length > 0) {
-                    setSelectedCamera(cameras[0])
+                    // Prefer back camera if available
+                    const backCamera = cameras.find(
+                        (camera) =>
+                            camera.label.toLowerCase().includes("back") || camera.label.toLowerCase().includes("rear"),
+                    )
+                    setSelectedCamera(backCamera || cameras[0])
                 }
             } catch (error) {
                 console.error("Camera permission denied:", error)

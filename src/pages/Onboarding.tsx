@@ -19,7 +19,7 @@ import {
     Check,
     X,
     Settings,
-    Moon,
+    // Moon,
     Eye,
     Scan,
     Copy,
@@ -144,7 +144,7 @@ const Onboarding = () => {
                 onClick={() => setDarkMode(!darkMode)}
                 className="fixed top-4 right-4 z-50 p-2 rounded-full bg-primary text-white shadow-lg hover:bg-opacity-90 transition-all"
             >
-                <Moon size={20} />
+                {/* <Moon size={20} /> */}
             </button>
 
             {/* Notification */}
